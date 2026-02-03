@@ -1,0 +1,7 @@
+com/example/taskmanager/repository/TaskRepository.class
+com/example/taskmanager/entity/Task.class
+com/example/taskmanager/TaskManagerApplication.class
+com/example/taskmanager/config/RedisConfig.class
+com/example/taskmanager/dto/NotificationEvent.class
+com/example/taskmanager/controller/TaskController.class
+com/example/taskmanager/service/TaskService.class

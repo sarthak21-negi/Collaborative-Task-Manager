@@ -1,0 +1,7 @@
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/service/TaskService.java
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/config/RedisConfig.java
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/entity/Task.java
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/repository/TaskRepository.java
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/TaskManagerApplication.java
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/dto/NotificationEvent.java
+/root/projects/collaborative-task-manager/backend-spring/src/main/java/com/example/taskmanager/controller/TaskController.java
