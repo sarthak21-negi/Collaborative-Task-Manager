@@ -1,32 +1,88 @@
-package com.example.taskmanager.service;
+package com.taskmanager.service;
 
-import com.example.taskmanager.dto.NotificationEvent;
-import com.example.taskmanager.entity.Task;
-import com.example.taskmanager.repository.TaskRepository;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.taskmanager.config.RedisChannels;
+import com.taskmanager.config.RedisPublisher;
+import com.taskmanager.dto.*;
+import com.taskmanager.model.*;
+import com.taskmanager.repository.*;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaskService {
 
-    private final TaskRepository repository;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final TaskRepository taskRepo;
+    private final ProjectRepository projectRepo;
+    private final UserRepository userRepo;
+    private final RedisPublisher redisPublisher;
 
-    public TaskService(TaskRepository repository, RedisTemplate<String, Object> redisTemplate) {
-        this.repository = repository;
-        this.redisTemplate = redisTemplate;
+    public TaskService(TaskRepository taskRepo,
+                       ProjectRepository projectRepo,
+                       UserRepository userRepo,
+                       RedisPublisher redisPublisher) {
+        this.taskRepo = taskRepo;
+        this.projectRepo = projectRepo;
+        this.userRepo = userRepo;
+        this.redisPublisher = redisPublisher;
     }
 
-    public Task create(Task task) {
-        Task saved = repository.save(task);
+    public TaskResponse create(TaskRequest req) {
 
-        NotificationEvent event = new NotificationEvent(
-                task.getAssignedTo(),
-                "TASK_ASSIGNED",
-                "New task: " + task.getTitle()
+        Task task = new Task();
+        task.setTitle(req.getTitle());
+        task.setDescription(req.getDescription());
+        task.setStatus(req.getStatus());
+
+        Project project = projectRepo.findById(req.getProjectId()).orElseThrow();
+        User user = userRepo.findById(req.getAssignedUserId()).orElseThrow();
+
+        task.setProject(project);
+        task.setAssignedTo(user);
+
+        Task saved = taskRepo.save(task);
+
+        TaskEvent event = new TaskEvent(
+                "CREATED",
+                saved.getId(),
+                saved.getTitle(),
+                saved.getStatus(),
+                project.getId(),
+                user.getId()
         );
 
-        redisTemplate.convertAndSend("notifications", event);
-        return saved;
+        redisPublisher.publish(RedisChannels.TASK_EVENTS, event);
+
+        return new TaskResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDescription(),
+                saved.getStatus()
+        );
+    }
+
+    public TaskResponse updateStatus(Long taskId, TaskStatus status) {
+
+        Task task = taskRepo.findById(taskId).orElseThrow();
+        task.setStatus(status);
+
+        Task saved = taskRepo.save(task);
+
+        TaskEvent event = new TaskEvent(
+                "MOVED",
+                saved.getId(),
+                saved.getTitle(),
+                saved.getStatus(),
+                saved.getProject().getId(),
+                saved.getAssignedTo().getId()
+        );
+
+        redisPublisher.publish(RedisChannels.TASK_EVENTS, event);
+
+        return new TaskResponse(
+                saved.getId(),
+                saved.getTitle(),
+                saved.getDescription(),
+                saved.getStatus()
+        );
     }
 }
+

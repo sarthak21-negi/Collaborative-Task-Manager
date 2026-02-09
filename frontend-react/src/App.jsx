@@ -1,13 +1,9 @@
-import TaskForm from "./components/TaskForm";
-import Notifications from "./components/Notifications";
+import { useAuth } from "./context/AuthContext";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Task Management</h2>
-      <TaskForm />
-      <Notifications />
-    </div>
-  );
+  const { token } = useAuth();
+  return token ? <Dashboard /> : <Login />;
 }
 

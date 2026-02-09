@@ -1,12 +1,12 @@
-package com.example.taskmanager.controller;
+package com.taskmanager.controller;
 
-import com.example.taskmanager.entity.Task;
-import com.example.taskmanager.service.TaskService;
+import com.taskmanager.dto.*;
+import com.taskmanager.model.TaskStatus;
+import com.taskmanager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/tasks")
-@CrossOrigin
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     private final TaskService service;
@@ -16,7 +16,13 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task create(@RequestBody Task task) {
-        return service.create(task);
+    public TaskResponse create(@RequestBody TaskRequest req) {
+        return service.create(req);
+    }
+
+    @PutMapping("/{id}/status")
+    public TaskResponse move(@PathVariable Long id,
+                             @RequestParam TaskStatus status) {
+        return service.updateStatus(id, status);
     }
 }

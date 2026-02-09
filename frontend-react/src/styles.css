@@ -1,0 +1,28 @@
+body {
+  font-family: Arial;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  margin: auto;
+}
+
+.board {
+  display: flex;
+  gap: 20px;
+}
+
+.column {
+  background: #eee;
+  padding: 10px;
+  width: 200px;
+}
+
+.task {
+  background: white;
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
