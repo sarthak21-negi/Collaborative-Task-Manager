@@ -12,12 +12,23 @@ body {
 .board {
   display: flex;
   gap: 20px;
+  padding: 20px;
 }
 
 .column {
-  background: #eee;
+  background: #f4f5f7;
   padding: 10px;
-  width: 200px;
+  width: 300px;
+  border-radius: 8px;
+  min-height: 400px;
+}
+
+.task-card {
+  background: white;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .task {

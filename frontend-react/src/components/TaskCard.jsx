@@ -1,18 +1,9 @@
-import { Draggable } from "@hello-pangea/dnd";
-
-export default function TaskCard({ task, index }) {
+export default function TaskCard({ task }) {
   return (
-    <Draggable draggableId={task.id} index={index}>
-      {(p) => (
-        <div
-          ref={p.innerRef}
-          {...p.draggableProps}
-          {...p.dragHandleProps}
-          className="task"
-        >
-          {task.title}
-        </div>
-      )}
-    </Draggable>
+    <div className="task-card">
+      <strong>{task.title}</strong>
+      <p>{task.description}</p>
+      <small>Status: {task.status}</small>
+    </div>
   );
 }
