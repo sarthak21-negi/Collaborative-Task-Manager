@@ -12,9 +12,24 @@ export default function Board() {
 
   // 🔥 Load tasks (empty now because backend has no GET endpoint yet)
   useEffect(() => {
-    // Future ready:
-    // api.get("/tasks").then(res => organizeTasks(res.data))
-  }, []);
+  const handler = (e) => {
+    const task = e.detail;
+
+    if (task.status === "TODO") {
+      setTodo(prev => [task, ...prev]);
+    }
+    if (task.status === "IN_PROGRESS") {
+      setInProgress(prev => [task, ...prev]);
+    }
+    if (task.status === "DONE") {
+      setDone(prev => [task, ...prev]);
+    }
+  };
+
+  window.addEventListener("TASK_CREATED", handler);
+  return () => window.removeEventListener("TASK_CREATED", handler);
+}, []);
+
 
   const organizeTasks = (list) => {
     const map = { TODO: [], IN_PROGRESS: [], DONE: [] };

@@ -8,11 +8,20 @@ export default function Dashboard() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const ws = connectWebSocket(user.id, (msg) => {
-      setNotifications(n => [msg.message, ...n]);
-    });
-    return () => ws.close();
-  }, []);
+  if (!user?.id) return;
+
+  const ws = connectWebSocket(user.id, (event) => {
+    console.log("🎯 DASHBOARD EVENT:", event);
+
+    const text = `🆕 ${event.title} | ${event.status} | Task#${event.taskId}`;
+
+    setNotifications(n => [text, ...n]);
+  });
+
+  return () => ws?.close();
+}, [user]);
+
+
 
   return (
     <>

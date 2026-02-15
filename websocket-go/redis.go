@@ -15,23 +15,27 @@ func startRedisSubscriber(hub *Hub) {
 	})
 
 	ctx := context.Background()
-	sub := rdb.Subscribe(ctx, "tasks")
+	sub := rdb.Subscribe(ctx, "task-events")
 
 	ch := sub.Channel()
 
-	log.Println("✅ Subscribed to Redis channel: tasks")
+	log.Println("✅ Subscribed to Redis channel: task-events")
 
 	for msg := range ch {
 
-		var event TaskEvent
-		err := json.Unmarshal([]byte(msg.Payload), &event)
-		if err != nil {
-			log.Println("Invalid JSON:", err)
-			continue
-		}
+		  log.Println("📨 REDIS RAW MESSAGE:", msg.Payload)
 
-		bytes, _ := json.Marshal(event)
+    var event TaskEvent
+    err := json.Unmarshal([]byte(msg.Payload), &event)
+    if err != nil {
+        log.Println("❌ Invalid JSON:", err)
+        continue
+    }
 
-		hub.Send(event.AssignedUserId, bytes)
+    log.Println("🎯 EVENT PARSED:", event)
+    log.Println("📡 SENDING TO USER:", event.AssignedUserId)
+
+    bytes, _ := json.Marshal(event)
+    hub.Send(event.AssignedUserId, bytes)
 	}
 }

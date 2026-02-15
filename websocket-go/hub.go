@@ -21,6 +21,7 @@ func (h *Hub) Register(userId int64, c *Client) {
 		h.clients[userId] = make(map[*Client]bool)
 	}
 	h.clients[userId][c] = true
+    println("✅ WS REGISTERED userId:", userId)
 }
 
 func (h *Hub) Unregister(userId int64, c *Client) {
@@ -37,7 +38,10 @@ func (h *Hub) Send(userId int64, message []byte) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	for client := range h.clients[userId] {
-		client.send <- message
-	}
+	println("📤 HUB SEND to userId:", userId)
+
+    for client := range h.clients[userId] {
+        client.send <- message
+        println("➡️ SENT TO CLIENT")
+    }
 }

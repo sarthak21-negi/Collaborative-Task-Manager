@@ -4,6 +4,7 @@ import com.taskmanager.dto.*;
 import com.taskmanager.model.TaskStatus;
 import com.taskmanager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -25,4 +26,11 @@ public class TaskController {
                              @RequestParam TaskStatus status) {
         return service.updateStatus(id, status);
     }
+
+    @GetMapping
+    public List<TaskResponse> all() {
+        return service.getAll();
+    } 
+
 }
+

@@ -6,6 +6,7 @@ import com.taskmanager.dto.*;
 import com.taskmanager.model.*;
 import com.taskmanager.repository.*;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class TaskService {
@@ -84,5 +85,18 @@ public class TaskService {
                 saved.getStatus()
         );
     }
+
+    public List<TaskResponse> getAll() {
+    return taskRepo.findAll()
+            .stream()
+            .map(t -> new TaskResponse(
+                    t.getId(),
+                    t.getTitle(),
+                    t.getDescription(),
+                    t.getStatus()
+            ))
+            .toList();
+    }
+
 }
 
