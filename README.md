@@ -38,3 +38,27 @@ Go WebSocket Server
      | WebSocket
      v
 Connected Clients
+
+```
+---
+
+# Tech Stack
+
+-- **Backend**
+   - Java
+   - Spring Boot
+   - Spring Security (JWT)
+   - Redis
+   - PostgreSQL
+   - Maven
+
+-- **Realtime Layer**
+   - Go
+   - Gorilla WebSocket
+   - Redis Pub/Sub
+   - Frontend
+   - React
+   - Axios
+-- **WebSocket**
+   - Context API
+   - Drag & Drop
