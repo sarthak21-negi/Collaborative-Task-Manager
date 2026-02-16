@@ -8,20 +8,29 @@ export default function Dashboard() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-  if (!user?.id) return;
+    if (!user?.id) return;
 
-  const ws = connectWebSocket(user.id, (event) => {
-    console.log("🎯 DASHBOARD EVENT:", event);
+    const ws = connectWebSocket(user.id, (event) => {
+      console.log("🎯 DASHBOARD EVENT:", event);
 
-    const text = `🆕 ${event.title} | ${event.status} | Task#${event.taskId}`;
+      const text = `🆕 ${event.title} | ${event.status} | Task#${event.taskId}`;
+      setNotifications(n => [text, ...n]);
 
-    setNotifications(n => [text, ...n]);
-  });
+      // ✅ Dispatch custom event for Board to catch
+      if (event.eventType === "CREATED") {
+        window.dispatchEvent(new CustomEvent("TASK_CREATED", { 
+          detail: {
+            id: event.taskId,
+            title: event.title,
+            description: event.description || "",
+            status: event.status
+          }
+        }));
+      }
+    });
 
-  return () => ws?.close();
-}, [user]);
-
-
+    return () => ws?.close();
+  }, [user]);
 
   return (
     <>

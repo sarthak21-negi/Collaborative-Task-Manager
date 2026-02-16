@@ -10,26 +10,34 @@ export default function Board() {
     DONE: []
   });
 
-  // 🔥 Load tasks (empty now because backend has no GET endpoint yet)
+  // ✅ Load existing tasks on mount
   useEffect(() => {
-  const handler = (e) => {
-    const task = e.detail;
+    const loadTasks = async () => {
+      try {
+        const response = await api.get("/tasks");
+        organizeTasks(response.data);
+      } catch (err) {
+        console.error("Failed to load tasks:", err);
+      }
+    };
+    loadTasks();
+  }, []);
 
-    if (task.status === "TODO") {
-      setTodo(prev => [task, ...prev]);
-    }
-    if (task.status === "IN_PROGRESS") {
-      setInProgress(prev => [task, ...prev]);
-    }
-    if (task.status === "DONE") {
-      setDone(prev => [task, ...prev]);
-    }
-  };
+  // ✅ Listen for new tasks from WebSocket
+  useEffect(() => {
+    const handler = (e) => {
+      const task = e.detail;
+      console.log("🎯 BOARD RECEIVED TASK:", task);
 
-  window.addEventListener("TASK_CREATED", handler);
-  return () => window.removeEventListener("TASK_CREATED", handler);
-}, []);
+      setTasks(prev => ({
+        ...prev,
+        [task.status]: [task, ...prev[task.status]]
+      }));
+    };
 
+    window.addEventListener("TASK_CREATED", handler);
+    return () => window.removeEventListener("TASK_CREATED", handler);
+  }, []);
 
   const organizeTasks = (list) => {
     const map = { TODO: [], IN_PROGRESS: [], DONE: [] };
@@ -37,7 +45,6 @@ export default function Board() {
     setTasks(map);
   };
 
-  // 🔥 REAL backend-wired movement
   const onDragEnd = async (result) => {
     if (!result.destination) return;
 
@@ -49,10 +56,8 @@ export default function Board() {
     const taskId = draggableId;
 
     try {
-      // ✅ Backend update
       await api.put(`/tasks/${taskId}/status?status=${newStatus}`);
 
-      // ✅ Optimistic UI
       const sourceCol = [...tasks[source.droppableId]];
       const destCol = [...tasks[destination.droppableId]];
 

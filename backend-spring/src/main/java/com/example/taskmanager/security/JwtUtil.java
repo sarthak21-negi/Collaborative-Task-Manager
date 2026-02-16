@@ -35,11 +35,21 @@ public class JwtUtil {
     }
 
     public boolean validate(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException e) {
-            return false;
-        }
+    try {
+        Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        return true;
+    } catch (ExpiredJwtException e) {
+        System.out.println("❌ JWT EXPIRED: " + e.getMessage());
+        return false;
+    } catch (MalformedJwtException e) {
+        System.out.println("❌ JWT MALFORMED: " + e.getMessage());
+        return false;
+    } catch (SignatureException e) {
+        System.out.println("❌ JWT SIGNATURE INVALID: " + e.getMessage());
+        return false;
+    } catch (JwtException e) {
+        System.out.println("❌ JWT INVALID: " + e.getMessage());
+        return false;
     }
+}
 }
