@@ -74,13 +74,14 @@ Connected Clients
 ```
 ---
 
-📦 Services
+## 📦 Services
 
-Service                       Description
-backend-spring	          REST API, Auth, DB, Redis publisher
-websocket-go	          WebSocket server, Redis subscriber
-redis	               Event broker
-frontend-react	          UI + Realtime client
+| Service          | Description                          |
+|------------------|--------------------------------------|
+| backend-spring   | REST API, Auth, DB, Redis publisher   |
+| websocket-go     | WebSocket server, Redis subscriber   |
+| redis            | Event broker                          |
+| frontend-react   | UI + Realtime client                  |
 
 ---
 
