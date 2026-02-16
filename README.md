@@ -118,8 +118,7 @@ Collaborative-Task-Manager/
 ├── websocket-go/       # Go WebSocket Server + Redis Subscriber
 ├── frontend-react/     # React Frontend
 └── README.md
-   - Context API
-   - Drag & Drop
+
 ```
 
 ---
