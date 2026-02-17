@@ -13,7 +13,17 @@ export default function Dashboard() {
     const ws = connectWebSocket(user.id, (event) => {
       console.log("🎯 DASHBOARD EVENT:", event);
 
-      const text = `🆕 ${event.title} | ${event.status} | Task#${event.taskId}`;
+      let text;
+  if (event.eventType === "CREATED") {
+    text = `🆕 Created: "${event.title}" | ${event.status} | Task#${event.taskId}`;
+  } else if (event.eventType === "DELETED") {
+    text = `🗑️ Deleted: "${event.title}" | Task#${event.taskId}`;
+  } else if (event.eventType === "MOVED") {
+    text = `🔀 Moved: "${event.title}" → ${event.status} | Task#${event.taskId}`;
+  } else {
+    text = `📌 ${event.title} | ${event.status} | Task#${event.taskId}`;
+  }
+  
       setNotifications(n => [text, ...n]);
 
       // ✅ Dispatch custom event for Board to catch
