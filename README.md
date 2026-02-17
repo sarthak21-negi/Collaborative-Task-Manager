@@ -18,7 +18,7 @@ Supports realtime task updates, notifications, authentication, drag-and-drop boa
 
 📋 Task Management
 
-  - Create / update / move tasks
+  - Create / update / move / delete tasks
 
   - Project-based task organization
 
@@ -199,6 +199,7 @@ Frontend URL: http://localhost:3000
      POST   /api/tasks
      GET    /api/tasks
      PUT    /api/tasks/{id}/status
+     DELETE /api/tasks/{id}
      ```
 
 ---
@@ -211,6 +212,7 @@ Frontend URL: http://localhost:3000
 ---
 
 ## API Example
+- **Create Task**
    ```bash
    curl -X POST http://localhost:8080/api/tasks \
        -H "Authorization: Bearer $TOKEN" \
@@ -223,5 +225,14 @@ Frontend URL: http://localhost:3000
            "assignedUserId": 4
   }'
   ```
-
+- **Move Task**
+  ```bash
+  curl -X PUT "http://localhost:8080/api/tasks/1/status?status=IN_PROGRESS" \
+  -H "Authorization: Bearer $TOKEN"
+  ```
+- **Delete Task**
+  ```bash
+  curl -X DELETE http://localhost:8080/api/tasks/1 \
+  -H "Authorization: Bearer $TOKEN"
+  ```
 ---
