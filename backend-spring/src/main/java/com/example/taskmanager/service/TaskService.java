@@ -98,5 +98,23 @@ public class TaskService {
             .toList();
     }
 
+     public void delete(Long taskId) {
+        Task task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found: " + taskId));
+
+        Long projectId = task.getProject().getId();
+        Long assignedUserId = task.getAssignedTo() != null 
+                ? task.getAssignedTo().getId() : null;
+
+        // Publish BEFORE deleting so we still have the data
+        TaskEvent event = new TaskEvent(
+                "DELETED", task.getId(), task.getTitle(),
+                task.getStatus(), projectId, assignedUserId
+        );
+        redisPublisher.publish(RedisChannels.TASK_EVENTS, event);
+
+        taskRepo.deleteById(taskId);
+    }
+
 }
 

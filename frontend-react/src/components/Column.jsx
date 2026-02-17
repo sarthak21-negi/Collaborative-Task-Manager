@@ -1,7 +1,7 @@
 import { Draggable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
 
-export default function Column({ title, tasks }) {
+export default function Column({ title, tasks, onDelete }) {
   return (
     <div className="column">
       <h3>{title.replace("_", " ")}</h3>
@@ -9,12 +9,8 @@ export default function Column({ title, tasks }) {
       {tasks.map((task, index) => (
         <Draggable draggableId={String(task.id)} index={index} key={task.id}>
           {(p) => (
-            <div
-              ref={p.innerRef}
-              {...p.draggableProps}
-              {...p.dragHandleProps}
-            >
-              <TaskCard task={task} />
+            <div ref={p.innerRef} {...p.draggableProps} {...p.dragHandleProps}>
+              <TaskCard task={task} onDelete={onDelete} /> {/* ✅ Pass onDelete */}
             </div>
           )}
         </Draggable>

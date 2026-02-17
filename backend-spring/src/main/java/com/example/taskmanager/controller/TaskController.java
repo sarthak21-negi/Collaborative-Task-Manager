@@ -3,6 +3,7 @@ package com.taskmanager.controller;
 import com.taskmanager.dto.*;
 import com.taskmanager.model.TaskStatus;
 import com.taskmanager.service.TaskService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -31,6 +32,12 @@ public class TaskController {
     public List<TaskResponse> all() {
         return service.getAll();
     } 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.ok("Task deleted");
+    }
 
 }
 

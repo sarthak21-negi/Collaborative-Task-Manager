@@ -11,8 +11,11 @@ export default function Login() {
   try {
     const res = await api.post("/auth/login", { username, password });
 
-    // backend only returns token
-    login(res.data.token, { username });  
+    // backend returns token, userId, userName
+    login(res.data.token, {
+        id: res.data.userId,        // ✅ Save userId
+        username: res.data.username
+      }); 
 
     window.location.href = "/dashboard";  // redirect after login
   } catch (err) {

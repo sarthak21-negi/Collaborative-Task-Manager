@@ -39,10 +39,31 @@ export default function Board() {
     return () => window.removeEventListener("TASK_CREATED", handler);
   }, []);
 
+  useEffect(() => {
+    const handler = (e) => {
+      const { taskId } = e.detail;
+      setTasks(prev => ({
+        TODO: prev.TODO.filter(t => t.id !== taskId),
+        IN_PROGRESS: prev.IN_PROGRESS.filter(t => t.id !== taskId),
+        DONE: prev.DONE.filter(t => t.id !== taskId)
+      }));
+    };
+    window.addEventListener("TASK_DELETED", handler);
+    return () => window.removeEventListener("TASK_DELETED", handler);
+  }, []);
+
   const organizeTasks = (list) => {
     const map = { TODO: [], IN_PROGRESS: [], DONE: [] };
     list.forEach(t => map[t.status].push(t));
     setTasks(map);
+  };
+
+  const handleDelete = (taskId) => {
+    setTasks(prev => ({
+      TODO: prev.TODO.filter(t => t.id !== taskId),
+      IN_PROGRESS: prev.IN_PROGRESS.filter(t => t.id !== taskId),
+      DONE: prev.DONE.filter(t => t.id !== taskId)
+    }));
   };
 
   const onDragEnd = async (result) => {
@@ -84,7 +105,7 @@ export default function Board() {
           <Droppable droppableId={col} key={col}>
             {(p) => (
               <div ref={p.innerRef} {...p.droppableProps}>
-                <Column title={col} tasks={tasks[col]} />
+                <Column title={col} tasks={tasks[col]} onDelete={handleDelete} />
                 {p.placeholder}
               </div>
             )}

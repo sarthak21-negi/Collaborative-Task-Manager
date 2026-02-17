@@ -27,6 +27,13 @@ export default function Dashboard() {
           }
         }));
       }
+
+      if (event.eventType === "DELETED") {
+        window.dispatchEvent(new CustomEvent("TASK_DELETED", {
+          detail: { taskId: event.taskId }
+        }));
+      }
+      
     });
 
     return () => ws?.close();

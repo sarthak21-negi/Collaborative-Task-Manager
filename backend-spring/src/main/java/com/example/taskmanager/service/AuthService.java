@@ -47,10 +47,16 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest req) {
         authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                req.getUsername(), req.getPassword()));
+        new UsernamePasswordAuthenticationToken(
+            req.getUsername(), req.getPassword()));
 
-        String token = jwtUtil.generateToken(req.getUsername());
-        return new AuthResponse(token);
+    // ✅ Fetch the user to get their ID
+    User user = userRepo.findByUsername(req.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    String token = jwtUtil.generateToken(req.getUsername());
+
+    // ✅ Return token + userId + username
+    return new AuthResponse(token, user.getId(), user.getUsername());
     }
 }
